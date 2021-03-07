@@ -106,11 +106,13 @@ class Interaction:
         if self.keyboard.up:
             self.wheel.vel.add(Vector(0, (-3.5)))
 
+
 kbd = Keyboard()
 wheel = Wheel(Vector((WIDTH-745), (HEIGHT-530)), 40)
 inter = Interaction(wheel, kbd)
 planet = Planet(Vector((WIDTH-400), (HEIGHT-400)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
+star = Star(Vector((WIDTH-200), (HEIGHT-400)), 40) # stick this into obstacle handler - randomise pos
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
@@ -119,6 +121,7 @@ def draw(canvas):
     wheel.update()
     wheel.draw(canvas)
     planet.draw(canvas)
+    star.draw(canvas)
 
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
 frame.set_draw_handler(draw)
