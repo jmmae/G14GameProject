@@ -13,3 +13,4 @@ class Asteroids:
     def update(self):
         None
     def get_p(self):
+        None
