@@ -82,7 +82,10 @@ kbd = Keyboard()
 wheel = Wheel(Vector((WIDTH-730), (HEIGHT-500)), 40)
 inter = Interaction(wheel, kbd)
 
+background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
+
 def draw(canvas):
+    canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
     inter.startgame()
     inter.update()
     wheel.update()
