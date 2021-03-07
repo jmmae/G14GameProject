@@ -16,7 +16,7 @@ class Wheel:
         self.IMG_CENTRE = (311,294)
         self.IMG_DIMS = (622,588)
         self.img_dest_dim = (128,128)
-        self.gravity = 0.1
+        self.gravity = 0
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
@@ -34,6 +34,7 @@ class Keyboard:
         self.left = False
         self.up = False
         self.down=False
+        self.space = False
 
     def keyDown(self, key):
         if key == simplegui.KEY_MAP['right']:
@@ -42,7 +43,8 @@ class Keyboard:
             self.left = True
         if key == simplegui.KEY_MAP['up']:
             self.up = True
-
+        if key == simplegui.KEY_MAP['space']:
+            self.space = True
     def keyUp(self, key):
         if key == simplegui.KEY_MAP['right']:
             self.right = False
@@ -50,36 +52,43 @@ class Keyboard:
             self.left = False
         if key == simplegui.KEY_MAP['up']:
             self.up = False
+        if key == simplegui.KEY_MAP['space']:
+            self.space = False
 
 class Interaction:
     def __init__(self, wheel, keyboard):
         self.wheel = wheel
         self.keyboard = keyboard
-        self.flagjump_up = True
-        self.flagjump_down = False
+        self.START = False
 
     def update(self):
-        self.flagjump_up = True
-        self.flagjump_down = False
+        if self.START == True:
+            self.keyboardinp()
+            self.wheel.gravity = 1.5
+
+    def startgame(self):
+        if self.keyboard.space == True:
+            self.START = True
+
+    def keyboardinp(self):
         if self.keyboard.right:
             self.wheel.vel.add(Vector(1, 0))
         if self.keyboard.left:
             self.wheel.vel.add(Vector(-1, 0))
         if self.keyboard.up:
-            self.wheel.vel.add(Vector(0, (-2)))# -1 + gravity
-
+            self.wheel.vel.add(Vector(0, (-3.5)))
 
 kbd = Keyboard()
-wheel = Wheel(Vector(WIDTH/2, 100), 40)
+wheel = Wheel(Vector((WIDTH-730), (HEIGHT-500)), 40)
 inter = Interaction(wheel, kbd)
 
 def draw(canvas):
+    inter.startgame()
     inter.update()
     wheel.update()
     wheel.draw(canvas)
 
 frame = simplegui.create_frame('Interactions', WIDTH, HEIGHT)
-frame.set_canvas_background('#000000')
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(kbd.keyDown)
 frame.set_keyup_handler(kbd.keyUp)
