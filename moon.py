@@ -4,9 +4,15 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
+<<<<<<< HEAD
 WIDTH = 500
 HEIGHT = 500
 
+=======
+WIDTH = 800
+HEIGHT = 600
+                
+>>>>>>> 222aac1821b464de581be2fa2acfba51792604db
 class Wheel:
     def __init__(self, pos, radius = 10):
         self.pos = pos
