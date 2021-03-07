@@ -25,8 +25,23 @@ class Wheel:
         self.pos.add(self.vel)
         self.vel.multiply(0.85)
         self.vel.add(Vector(0, (self.gravity)))
+
     def getPos(self):
         return self.pos.get_p()
+
+class Planet: #WIP
+    def __init__(self, pos, radius = 10):
+        self.pos = pos
+        self.vel = Vector()
+        self.radius = max(radius, 10)
+        self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png')
+        self.IMG_CENTRE = (273/2,188/2)
+        self.IMG_DIMS = (273,188)
+        self.img_dest_dim = (128,128)
+
+    def draw(self, canvas):
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+
 
 class Keyboard:
     def __init__(self):
@@ -45,6 +60,7 @@ class Keyboard:
             self.up = True
         if key == simplegui.KEY_MAP['space']:
             self.space = True
+
     def keyUp(self, key):
         if key == simplegui.KEY_MAP['right']:
             self.right = False
@@ -81,17 +97,16 @@ class Interaction:
 kbd = Keyboard()
 wheel = Wheel(Vector((WIDTH-730), (HEIGHT-500)), 40)
 inter = Interaction(wheel, kbd)
-
-background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
+planet = Planet(Vector((WIDTH-400), (HEIGHT-400)), 40) ## test planet spawn
 
 def draw(canvas):
-    canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
     inter.startgame()
     inter.update()
     wheel.update()
     wheel.draw(canvas)
+    planet.draw(canvas)
 
-frame = simplegui.create_frame('Interactions', WIDTH, HEIGHT)
+frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(kbd.keyDown)
 frame.set_keyup_handler(kbd.keyUp)
