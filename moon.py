@@ -12,10 +12,10 @@ class Wheel:
         self.pos = pos
         self.vel = Vector()
         self.radius = max(radius, 10)
-        self.IMG = simplegui.load_image('https://i.imgur.com/cuRu9OZ.png')
+        self.IMG = simplegui.load_image('https://i.imgur.com/cuRu9OZ.png') #MOON
         self.IMG_CENTRE = (311,294)
         self.IMG_DIMS = (622,588)
-        self.img_dest_dim = (128,128)
+        self.img_dest_dim = (100, 100)
         self.gravity = 0
 
     def draw(self, canvas):
@@ -34,15 +34,27 @@ class Planet: #WIP
         self.pos = pos
         self.vel = Vector()
         self.radius = max(radius, 10)
-        self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png')
-        self.IMG_CENTRE = (273/2,188/2)
-        self.IMG_DIMS = (273,188)
-        self.img_dest_dim = (128,128)
+        self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #PLANET
+        self.IMG_CENTRE = (273/2, 188/2)
+        self.IMG_DIMS = (273, 188)
+        self.img_dest_dim = (165, 128)
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
 
+class Star: #WIP
+    def __init__(self, pos, radius = 10):
+        self.pos = pos
+        self.vel = Vector()
+        self.radius = max(radius, 10)
+        self.IMG = simplegui.load_image('https://i.imgur.com/MsKwX7I.png ') #STAR
+        self.IMG_CENTRE = (113/2, 112/2)
+        self.IMG_DIMS = (113, 112)
+        self.img_dest_dim = (58, 58)
 
+    def draw(self, canvas):
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+        
 class Keyboard:
     def __init__(self):
         self.right = False
@@ -95,7 +107,7 @@ class Interaction:
             self.wheel.vel.add(Vector(0, (-3.5)))
 
 kbd = Keyboard()
-wheel = Wheel(Vector((WIDTH-730), (HEIGHT-500)), 40)
+wheel = Wheel(Vector((WIDTH-745), (HEIGHT-530)), 40)
 inter = Interaction(wheel, kbd)
 planet = Planet(Vector((WIDTH-400), (HEIGHT-400)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
