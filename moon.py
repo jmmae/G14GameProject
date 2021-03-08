@@ -169,7 +169,15 @@ def draw(canvas):
     alien.draw(canvas)
     asteroid.draw(canvas)
 
+#toStart = input("Welcome to HOPPY MOON!")
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
+label1 = frame.add_label('WELCOME TO HOPPY MOON!')
+label2 = frame.add_label('')
+label3 = frame.add_label('Instructions:')
+label4 = frame.add_label('1. Use arrow keys to move.', 200)
+label5 = frame.add_label('2. Avoid the obstacles and collect stars to level up!', 200)
+label6 = frame.add_label('3. Click spacebar to start.', 200)
+
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(kbd.keyDown)
 frame.set_keyup_handler(kbd.keyUp)
