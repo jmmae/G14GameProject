@@ -18,6 +18,7 @@ class Moon:
         self.IMG_DIMS = (622,588)
         self.img_dest_dim = (100, 100)
         self.gravity = 0
+        self.ALIVE = True
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
@@ -30,7 +31,7 @@ class Moon:
     def getPos(self):
         return self.pos.get_p()
 
-class Planet:
+class Planet: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -38,12 +39,12 @@ class Planet:
         self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #PLANET
         self.IMG_CENTRE = (273/2, 188/2)
         self.IMG_DIMS = (273, 188)
-        self.img_dest_dim = (165, 115)
+        self.img_dest_dim = (140, 100)
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
 
-class Star:
+class Star: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -55,8 +56,8 @@ class Star:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-
-class Cloud:
+        
+class Cloud: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -69,7 +70,7 @@ class Cloud:
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
 
-class Alien:
+class Alien: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -81,8 +82,8 @@ class Alien:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-
-class Asteroid:
+    
+class Asteroid: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -93,7 +94,7 @@ class Asteroid:
         self.img_dest_dim = (85, 60)
 
     def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)  
 
 #class LevelHandler: #WIP
     #def __init__(self):
@@ -101,7 +102,7 @@ class Asteroid:
         #self.levelCongrats = #level complete screen
         #self.levelHolder = #array to store level objects??
         #self.levelBoundary = 5
-
+        
     #def updateLevel(self,player):
         #display instructionscreen
         #if player.getStarCount == self.levelBoundary:
@@ -109,7 +110,7 @@ class Asteroid:
             #updateLevel
             #self.levelBoundary+= 5 #need 5 stars to get to next lvl
         #in interaction class, if player.starlevel == x: grab new level from array and load
-
+        
     #def draw(canvas):
         #draw currently loaded level onto screen.
 
@@ -140,30 +141,36 @@ class Keyboard:
             self.up = False
         if key == simplegui.KEY_MAP['space']:
             self.space = False
-
+            
 class ObstacleHandler:
     def __init__(self):
-        self.obstacleLimit = 3
-        self.planets_list=[] #Creates an array
+        self.obstacleLimit = 2
+        self.planets_list = [] #Creates an array 
         #self.spawnArea --> need 2 rectangles where they can spawn,
-    def update(self):
+        
+    def update(self):        
         if len(self.planets_list) < 2:
             self.spawn_planets()
-
+    
     def spawn_planets(self):
         for i in range(0,self.obstacleLimit):
-            self.vectorPosition = Vector(random.randrange(0,600),random.randrange(0,400))
+            self.vectorPosition = Vector(random.randrange(100,600),random.randrange(100,300))
             self.newPlanet = Planet(self.vectorPosition)
             self.add_planet(self.newPlanet)
-
+            #if newPlanet has same position or near another one, dont add it. Otherwise add to array.
+    
+    #def PlanetHit(self,wheel):
+        #if wheel.get_p()
+        
     def draw(self, canvas):
         self.update()
         for planet in self.planets_list:
             planet.draw(canvas)
+            
     def add_planet(self,i):
         self.planets_list.append(i)
-
-
+        
+        
 class Interaction:
     def __init__(self, wheel, keyboard):
         self.wheel = wheel
@@ -190,7 +197,7 @@ class Interaction:
 kbd = Keyboard()
 moon = Moon(Vector((WIDTH-745), (HEIGHT-530)), 40)
 inter = Interaction(moon, kbd)
-planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
+#planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
 star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle handler - randomise pos
 cloud = Cloud(Vector((WIDTH-450), (HEIGHT-400)), 40) #in obstacke handler - random pos below planets
@@ -200,8 +207,8 @@ obstacle= ObstacleHandler()
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
-    planet.draw(canvas)
     star.draw(canvas)
+    #planet.draw(canvas)
     cloud.draw(canvas)
     alien.draw(canvas)
     asteroid.draw(canvas)
@@ -210,7 +217,6 @@ def draw(canvas):
     inter.update()
     moon.update()
     moon.draw(canvas)
-
 
 nameInp = input("Welcome to HOPPY MOON! What is your name?")
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
