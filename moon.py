@@ -1,3 +1,4 @@
+import random
 from user304_rsf8mD0BOQ_1 import Vector
 try:
     import simplegui
@@ -7,7 +8,7 @@ except ImportError:
 WIDTH = 800
 HEIGHT = 600
 
-class Wheel:
+class Moon:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -54,7 +55,7 @@ class Star:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-
+        
 class Cloud: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
@@ -80,8 +81,7 @@ class Alien:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
- 
- 
+    
 class Asteroid: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
@@ -100,7 +100,7 @@ class Keyboard:
         self.right = False
         self.left = False
         self.up = False
-        self.down=False
+        self.down = False
         self.space = False
 
     def keyDown(self, key):
@@ -132,7 +132,7 @@ class Interaction:
     def update(self):
         if self.START == True:
             self.keyboardinp()
-            self.wheel.gravity = 1.5
+            self.wheel.gravity = 1.25
 
     def startgame(self):
         if self.keyboard.space == True:
@@ -146,10 +146,9 @@ class Interaction:
         if self.keyboard.up:
             self.wheel.vel.add(Vector(0, (-3.5)))
 
-
 kbd = Keyboard()
-wheel = Wheel(Vector((WIDTH-745), (HEIGHT-530)), 40)
-inter = Interaction(wheel, kbd)
+moon = Moon(Vector((WIDTH-745), (HEIGHT-530)), 40)
+inter = Interaction(moon, kbd)
 planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
 star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle handler - randomise pos
@@ -159,17 +158,17 @@ asteroid = Asteroid(Vector((WIDTH-250), (HEIGHT-250)), 40) #in obstacle handler 
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
-    inter.startgame()
-    inter.update()
-    wheel.update()
-    wheel.draw(canvas)
     planet.draw(canvas)
     star.draw(canvas)
     cloud.draw(canvas)
     alien.draw(canvas)
     asteroid.draw(canvas)
+    inter.startgame()
+    inter.update()
+    moon.update()
+    moon.draw(canvas)
 
-#toStart = input("Welcome to HOPPY MOON!")
+nameInp = input("Welcome to HOPPY MOON! What is your name?")
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
 label1 = frame.add_label('WELCOME TO HOPPY MOON!')
 label2 = frame.add_label('')
