@@ -54,8 +54,21 @@ class Star: #WIP
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-        
-class Keyboard:
+
+class Cloud: 
+    def __init__(self, pos, radius = 10):
+        self.pos = pos
+        self.vel = Vector()
+        self.radius = max(radius, 10)
+        self.IMG = simplegui.load_image('https://i.imgur.com/hLxKYTT.png') #CLOUD
+        self.IMG_CENTRE = (250/2, 127/2)
+        self.IMG_DIMS = (250, 127)
+        self.img_dest_dim = (108, 58)
+
+    def draw(self, canvas):
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+
+ class Keyboard:
     def __init__(self):
         self.right = False
         self.left = False
@@ -113,6 +126,7 @@ inter = Interaction(wheel, kbd)
 planet = Planet(Vector((WIDTH-400), (HEIGHT-400)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
 star = Star(Vector((WIDTH-200), (HEIGHT-400)), 40) # stick this into obstacle handler - randomise pos
+cloud = Cloud(Vector((WIDTH-500), (HEIGHT-300)), 40) #in obstacke handler - random pos below planets
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
@@ -122,6 +136,7 @@ def draw(canvas):
     wheel.draw(canvas)
     planet.draw(canvas)
     star.draw(canvas)
+    cloud.draw(canvas)
 
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
 frame.set_draw_handler(draw)
