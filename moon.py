@@ -29,7 +29,7 @@ class Wheel:
     def getPos(self):
         return self.pos.get_p()
 
-class Planet: #WIP
+class Planet: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -37,12 +37,12 @@ class Planet: #WIP
         self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #PLANET
         self.IMG_CENTRE = (273/2, 188/2)
         self.IMG_DIMS = (273, 188)
-        self.img_dest_dim = (165, 128)
+        self.img_dest_dim = (165, 120)
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
 
-class Star: #WIP
+class Star: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -67,8 +67,8 @@ class Cloud:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
- 
- class Alien: 
+
+class Alien: 
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -95,7 +95,7 @@ class Asteroid:
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)  
 
- class Keyboard:
+class Keyboard:
     def __init__(self):
         self.right = False
         self.left = False
@@ -150,12 +150,12 @@ class Interaction:
 kbd = Keyboard()
 wheel = Wheel(Vector((WIDTH-745), (HEIGHT-530)), 40)
 inter = Interaction(wheel, kbd)
-planet = Planet(Vector((WIDTH-400), (HEIGHT-400)), 40) ## test planet spawn
+planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
-star = Star(Vector((WIDTH-200), (HEIGHT-400)), 40) # stick this into obstacle handler - randomise pos
-cloud = Cloud(Vector((WIDTH-500), (HEIGHT-300)), 40) #in obstacke handler - random pos below planets
-alien= Alien(Vector((WIDTH-300), (HEIGHT-200)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
-asteroid= Asteroid(Vector((WIDTH-250), (HEIGHT-300)), 40) #in obstacle handler - rotating in static pos ?
+star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle handler - randomise pos
+cloud = Cloud(Vector((WIDTH-450), (HEIGHT-400)), 40) #in obstacke handler - random pos below planets
+alien = Alien(Vector((WIDTH-150), (HEIGHT-500)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
+asteroid = Asteroid(Vector((WIDTH-250), (HEIGHT-250)), 40) #in obstacle handler - rotating in static pos ?
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
