@@ -80,6 +80,20 @@ class Cloud:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+ 
+ 
+class Asteroid: 
+    def __init__(self, pos, radius = 10):
+        self.pos = pos
+        self.vel = Vector()
+        self.radius = max(radius, 10)
+        self.IMG = simplegui.load_image('https://i.imgur.com/SBgHMg9.png') #ASTEROID
+        self.IMG_CENTRE = (156/2, 147/2)
+        self.IMG_DIMS = (156, 147)
+        self.img_dest_dim = (85, 60)
+
+    def draw(self, canvas):
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)  
 
  class Keyboard:
     def __init__(self):
@@ -140,7 +154,8 @@ planet = Planet(Vector((WIDTH-400), (HEIGHT-400)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
 star = Star(Vector((WIDTH-200), (HEIGHT-400)), 40) # stick this into obstacle handler - randomise pos
 cloud = Cloud(Vector((WIDTH-500), (HEIGHT-300)), 40) #in obstacke handler - random pos below planets
-alien= Alien(Vector((WIDTH-300), (HEIGHT-200)), 40) #in obstacle handler - coming from right edge ?
+alien= Alien(Vector((WIDTH-300), (HEIGHT-200)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
+asteroid= Asteroid(Vector((WIDTH-250), (HEIGHT-300)), 40) #in obstacle handler - rotating in static pos ?
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
@@ -152,6 +167,7 @@ def draw(canvas):
     star.draw(canvas)
     cloud.draw(canvas)
     alien.draw(canvas)
+    asteroid.draw(canvas)
 
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
 frame.set_draw_handler(draw)
