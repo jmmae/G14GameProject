@@ -30,7 +30,7 @@ class Moon:
     def getPos(self):
         return self.pos.get_p()
 
-class Planet: 
+class Planet:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -38,12 +38,12 @@ class Planet:
         self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #PLANET
         self.IMG_CENTRE = (273/2, 188/2)
         self.IMG_DIMS = (273, 188)
-        self.img_dest_dim = (165, 120)
+        self.img_dest_dim = (165, 115)
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
 
-class Star: 
+class Star:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -55,8 +55,8 @@ class Star:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-        
-class Cloud: 
+
+class Cloud:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -69,7 +69,7 @@ class Cloud:
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
 
-class Alien: 
+class Alien:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -81,8 +81,8 @@ class Alien:
 
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-    
-class Asteroid: 
+
+class Asteroid:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
@@ -93,7 +93,25 @@ class Asteroid:
         self.img_dest_dim = (85, 60)
 
     def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)  
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+
+#class LevelHandler: #WIP
+    #def __init__(self):
+        #self.levelInstructions = #instruction screen
+        #self.levelCongrats = #level complete screen
+        #self.levelHolder = #array to store level objects??
+        #self.levelBoundary = 5
+
+    #def updateLevel(self,player):
+        #display instructionscreen
+        #if player.getStarCount == self.levelBoundary:
+            #displaylevelCongrats.
+            #updateLevel
+            #self.levelBoundary+= 5 #need 5 stars to get to next lvl
+        #in interaction class, if player.starlevel == x: grab new level from array and load
+
+    #def draw(canvas):
+        #draw currently loaded level onto screen.
 
 class Keyboard:
     def __init__(self):
@@ -122,6 +140,29 @@ class Keyboard:
             self.up = False
         if key == simplegui.KEY_MAP['space']:
             self.space = False
+
+class ObstacleHandler:
+    def __init__(self):
+        self.obstacleLimit = 3
+        self.planets_list=[] #Creates an array
+        #self.spawnArea --> need 2 rectangles where they can spawn,
+    def update(self):
+        if len(self.planets_list) < 2:
+            self.spawn_planets()
+
+    def spawn_planets(self):
+        for i in range(0,self.obstacleLimit):
+            self.vectorPosition = Vector(random.randrange(0,600),random.randrange(0,400))
+            self.newPlanet = Planet(self.vectorPosition)
+            self.add_planet(self.newPlanet)
+
+    def draw(self, canvas):
+        self.update()
+        for planet in self.planets_list:
+            planet.draw(canvas)
+    def add_planet(self,i):
+        self.planets_list.append(i)
+
 
 class Interaction:
     def __init__(self, wheel, keyboard):
@@ -155,6 +196,7 @@ star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle ha
 cloud = Cloud(Vector((WIDTH-450), (HEIGHT-400)), 40) #in obstacke handler - random pos below planets
 alien = Alien(Vector((WIDTH-150), (HEIGHT-500)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
 asteroid = Asteroid(Vector((WIDTH-250), (HEIGHT-250)), 40) #in obstacle handler - rotating in static pos ?
+obstacle= ObstacleHandler()
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
@@ -163,19 +205,21 @@ def draw(canvas):
     cloud.draw(canvas)
     alien.draw(canvas)
     asteroid.draw(canvas)
+    obstacle.draw(canvas)
     inter.startgame()
     inter.update()
     moon.update()
     moon.draw(canvas)
 
+
 nameInp = input("Welcome to HOPPY MOON! What is your name?")
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
-label1 = frame.add_label('WELCOME TO HOPPY MOON!')
-label2 = frame.add_label('')
+label1 = frame.add_label('WELCOME TO HOPPY MOON '+ nameInp + "!")
+label2 = frame.add_label('', 300)
 label3 = frame.add_label('Instructions:')
-label4 = frame.add_label('1. Use arrow keys to move.', 200)
+label4 = frame.add_label('1. Use arrow keys to move.')
 label5 = frame.add_label('2. Avoid the obstacles and collect stars to level up!', 200)
-label6 = frame.add_label('3. Click spacebar to start.', 200)
+label6 = frame.add_label('3. Click spacebar to start.')
 
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(kbd.keyDown)
