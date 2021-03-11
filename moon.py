@@ -148,13 +148,17 @@ class ObstacleHandler:
         self.planets_list = [] #Creates an array 
         #self.spawnArea --> need 2 rectangles where they can spawn,
         
+        self.star_list = []
+        
     def update(self):        
         if len(self.planets_list) < 2:
             self.spawn_planets()
+        if len(self.star_list) < 1:
+            self.spawn_stars()
     
     def spawn_planets(self):
-        for i in range(0,self.obstacleLimit):
-            self.vectorPosition = Vector(random.randrange(100,600),random.randrange(100,300))
+        for i in range(0, self.obstacleLimit):
+            self.vectorPosition = Vector(random.randrange(100,600), random.randrange(100,300))
             self.newPlanet = Planet(self.vectorPosition)
             self.add_planet(self.newPlanet)
             #if newPlanet has same position or near another one, dont add it. Otherwise add to array.
@@ -166,9 +170,20 @@ class ObstacleHandler:
         self.update()
         for planet in self.planets_list:
             planet.draw(canvas)
+        for star in self.star_list:
+            star.draw(canvas)
             
     def add_planet(self,i):
         self.planets_list.append(i)
+        
+    def spawn_stars(self):
+        for i in range(0, self.obstacleLimit):
+            self.vectorPosition = Vector(random.randrange(100,600), random.randrange(100,300))
+            self.newStar = Star(self.vectorPosition)
+            self.add_star(self.newStar)
+     
+    def add_star(self, i):
+        self.star_list.append(i)
         
         
 class Interaction:
@@ -199,7 +214,7 @@ moon = Moon(Vector((WIDTH-745), (HEIGHT-530)), 40)
 inter = Interaction(moon, kbd)
 #planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
-star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle handler - randomise pos
+#star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle handler - randomise pos
 cloud = Cloud(Vector((WIDTH-450), (HEIGHT-400)), 40) #in obstacke handler - random pos below planets
 alien = Alien(Vector((WIDTH-150), (HEIGHT-500)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
 asteroid = Asteroid(Vector((WIDTH-250), (HEIGHT-250)), 40) #in obstacle handler - rotating in static pos ?
@@ -207,7 +222,7 @@ obstacle= ObstacleHandler()
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
-    star.draw(canvas)
+    #star.draw(canvas)
     #planet.draw(canvas)
     cloud.draw(canvas)
     alien.draw(canvas)
