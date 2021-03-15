@@ -31,11 +31,15 @@ class Moon(Obstacle):
         self.gravity = 0
         self.ALIVE = True
             
+        #https://i.imgur.com/T5dL54b.png - game over screen
     def update(self):
-        self.pos.add(self.vel)
-        self.vel.multiply(0.85)
-        self.vel.add(Vector(0, (self.gravity)))
-
+        if self.ALIVE == True:
+            self.pos.add(self.vel)
+            self.vel.multiply(0.85)
+            self.vel.add(Vector(0, (self.gravity)))
+        if self.ALIVE == False:
+            print("Your dead")
+            
     def getPos(self):
         return self.pos.get_p()
 
@@ -214,19 +218,27 @@ class Interaction:
         self.kbd = kbd
         self.moon = Moon(Vector((WIDTH-745), (HEIGHT-530)), 40)
         self.background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
-        self.obstacle= ObstacleHandler()
+        self.gameover = simplegui.load_image("https://i.imgur.com/T5dL54b.png")
+        self.obstacle = ObstacleHandler()
         self.START = False
-
+        
     def update(self):
         if self.START == True:
             self.keyboardinp()
             self.moon.gravity = 1.25
+            for i in self.obstacle.planets_list:
+                if self.hit(self.moon,i):
+                    self.moon.ALIVE = False
             
     def introScreen(self, canvas):
         intro = simplegui.load_image('https://i.imgur.com/bdN3ctD.png')
         if self.kbd.m == False:
             canvas.draw_image(intro, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))        
-
+    
+    def hit(self, b1, b2):
+        sep_vec = b1.pos.copy().subtract(b2.pos)
+        return sep_vec.length() < b1.radius + b2.radius
+   
     def startgame(self):
         if self.kbd.space == True:
             self.START = True
@@ -240,13 +252,16 @@ class Interaction:
             self.moon.vel.add(Vector(0, (-3.5)))
             
     def draw(self,canvas):
-        canvas.draw_image(self.background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
-        self.startgame()
-        self.obstacle.draw(canvas)
-        self.update()
-        self.moon.update()
-        self.moon.draw(canvas)
-        self.introScreen(canvas)
+        if self.moon.ALIVE == True:
+            canvas.draw_image(self.background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
+            self.startgame()
+            self.obstacle.draw(canvas)
+            self.update()
+            self.moon.update()
+            self.moon.draw(canvas)
+            self.introScreen(canvas)
+        else:
+            canvas.draw_image(self.gameover, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))
     
 kbd = Keyboard()
 interaction = Interaction(kbd)
