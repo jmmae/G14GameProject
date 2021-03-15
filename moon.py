@@ -121,6 +121,7 @@ class Keyboard:
         self.up = False
         self.down = False
         self.space = False
+        self.m = False
 
     def keyDown(self, key):
         if key == simplegui.KEY_MAP['right']:
@@ -131,6 +132,8 @@ class Keyboard:
             self.up = True
         if key == simplegui.KEY_MAP['space']:
             self.space = True
+        if key == simplegui.KEY_MAP['M']:
+            self.m = True
 
     def keyUp(self, key):
         if key == simplegui.KEY_MAP['right']:
@@ -196,6 +199,11 @@ class Interaction:
         if self.START == True:
             self.keyboardinp()
             self.wheel.gravity = 1.25
+            
+    def introScreen(self, canvas):
+        intro = simplegui.load_image('https://i.imgur.com/bdN3ctD.png')
+        if self.keyboard.m == False:
+            canvas.draw_image(intro, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))        
 
     def startgame(self):
         if self.keyboard.space == True:
@@ -232,6 +240,7 @@ def draw(canvas):
     inter.update()
     moon.update()
     moon.draw(canvas)
+    inter.introScreen(canvas)
 
 nameInp = input("Welcome to HOPPY MOON! What is your name?")
 frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
