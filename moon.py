@@ -8,21 +8,29 @@ except ImportError:
 WIDTH = 800
 HEIGHT = 600
 
-class Moon:
+class Obstacle:
     def __init__(self, pos, radius = 10):
         self.pos = pos
         self.vel = Vector()
         self.radius = max(radius, 10)
+        self.IMG = None
+        self.IMG_CENTRE = None
+        self.IMG_DIMS = None
+        self.img_dest_dim = None
+        
+    def draw(self, canvas):
+        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+        
+class Moon(Obstacle):
+    def __init__(self, pos, radius = 10):
+        super().__init__(pos, radius = 10)
         self.IMG = simplegui.load_image('https://i.imgur.com/cuRu9OZ.png') #MOON
         self.IMG_CENTRE = (311,294)
         self.IMG_DIMS = (622,588)
         self.img_dest_dim = (100, 100)
         self.gravity = 0
         self.ALIVE = True
-
-    def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-
+            
     def update(self):
         self.pos.add(self.vel)
         self.vel.multiply(0.85)
@@ -31,70 +39,45 @@ class Moon:
     def getPos(self):
         return self.pos.get_p()
 
-class Planet: 
+class Planet(Obstacle):
     def __init__(self, pos, radius = 10):
-        self.pos = pos
-        self.vel = Vector()
-        self.radius = max(radius, 10)
+        super().__init__(pos, radius = 10)
         self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #PLANET
         self.IMG_CENTRE = (273/2, 188/2)
         self.IMG_DIMS = (273, 188)
         self.img_dest_dim = (140, 100)
 
-    def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-
-class Star: 
+class Star(Obstacle):
     def __init__(self, pos, radius = 10):
-        self.pos = pos
-        self.vel = Vector()
-        self.radius = max(radius, 10)
+        super().__init__(pos, radius = 10)
         self.IMG = simplegui.load_image('https://i.imgur.com/MsKwX7I.png ') #STAR
         self.IMG_CENTRE = (113/2, 112/2)
         self.IMG_DIMS = (113, 112)
         self.img_dest_dim = (58, 58)
-
-    def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
         
-class Cloud: 
+class Cloud(Obstacle):
     def __init__(self, pos, radius = 10):
-        self.pos = pos
-        self.vel = Vector()
-        self.radius = max(radius, 10)
+        super().__init__(pos, radius = 10)
         self.IMG = simplegui.load_image('https://i.imgur.com/hLxKYTT.png') #CLOUD
         self.IMG_CENTRE = (250/2, 127/2)
         self.IMG_DIMS = (250, 127)
         self.img_dest_dim = (108, 58)
-
-    def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-
-class Alien: 
+        
+class Alien(Obstacle):
     def __init__(self, pos, radius = 10):
-        self.pos = pos
-        self.vel = Vector()
-        self.radius = max(radius, 10)
+        super().__init__(pos, radius = 10)
         self.IMG = simplegui.load_image('https://i.imgur.com/8OwD4yc.png') #ALIEN
         self.IMG_CENTRE = (229/2, 172/2)
         self.IMG_DIMS = (229, 172)
         self.img_dest_dim = (88, 48)
 
-    def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
-    
-class Asteroid: 
+class Asteroid(Obstacle):
     def __init__(self, pos, radius = 10):
-        self.pos = pos
-        self.vel = Vector()
-        self.radius = max(radius, 10)
+        super().__init__(pos, radius = 10)
         self.IMG = simplegui.load_image('https://i.imgur.com/SBgHMg9.png') #ASTEROID
         self.IMG_CENTRE = (156/2, 147/2)
         self.IMG_DIMS = (156, 147)
         self.img_dest_dim = (85, 60)
-
-    def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)  
 
 #class LevelHandler: #WIP
     #def __init__(self):
@@ -147,47 +130,84 @@ class Keyboard:
             
 class ObstacleHandler:
     def __init__(self):
-        self.obstacleLimit = 2
-        self.planets_list = [] #Creates an array 
-        #self.spawnArea --> need 2 rectangles where they can spawn,
-        
+        self.updateCounter = False
+        self.planetLimit = 1
+        self.planets_list = [] 
+        self.starLimit = 1
         self.star_list = []
-        
-    def update(self):        
-        if len(self.planets_list) < 2:
-            self.spawn_planets()
-        if len(self.star_list) < 1:
-            self.spawn_stars()
+        self.cloudLimit = 1
+        self.cloud_list = []
+        self.alienLimit = 1
+        self.alien_list = []
+        self.asteroidLimit = 1
+        self.asteroid_list = []
     
     def spawn_planets(self):
-        for i in range(0, self.obstacleLimit):
-            self.vectorPosition = Vector(random.randrange(100,600), random.randrange(100,300))
+        for i in range(0, self.planetLimit):
+            self.vectorPosition = Vector(random.randrange(170, 600), random.randrange(100, 500))
             self.newPlanet = Planet(self.vectorPosition)
             self.add_planet(self.newPlanet)
-            #if newPlanet has same position or near another one, dont add it. Otherwise add to array.
-    
-    #def PlanetHit(self,wheel):
-        #if wheel.get_p()
-        
-    def draw(self, canvas):
-        self.update()
-        for planet in self.planets_list:
-            planet.draw(canvas)
-        for star in self.star_list:
-            star.draw(canvas)
-            
+       
     def add_planet(self,i):
         self.planets_list.append(i)
         
     def spawn_stars(self):
-        for i in range(0, self.obstacleLimit):
-            self.vectorPosition = Vector(random.randrange(100,600), random.randrange(100,300))
+        for i in range(0, self.starLimit):
+            self.vectorPosition = Vector(random.randrange(170, 600), random.randrange(100, 500))
             self.newStar = Star(self.vectorPosition)
             self.add_star(self.newStar)
      
     def add_star(self, i):
         self.star_list.append(i)
         
+    def spawn_clouds(self):
+        for i in range(0, self.cloudLimit):
+            self.vectorPosition = Vector(random.randrange(170, 600), random.randrange(100, 500))
+            self.newCloud = Cloud(self.vectorPosition)
+            self.add_cloud(self.newCloud)
+     
+    def add_cloud(self, i):
+        self.cloud_list.append(i)
+        
+    def spawn_aliens(self):
+        for i in range(0, self.alienLimit):
+            self.vectorPosition = Vector(random.randrange(170, 600), random.randrange(100, 500))
+            self.newAlien = Alien(self.vectorPosition)
+            self.add_alien(self.newAlien)
+     
+    def add_alien(self, i):
+        self.alien_list.append(i)
+        
+    def spawn_asteroids(self):
+        for i in range(0, self.asteroidLimit):
+            self.vectorPosition = Vector(random.randrange(170, 600), random.randrange(100, 500))
+            self.newAsteroid = Asteroid(self.vectorPosition)
+            self.add_asteroids(self.newAsteroid)
+     
+    def add_asteroids(self, i):
+        self.asteroid_list.append(i)
+        
+    def update(self):        
+        self.spawn_planets()
+        self.spawn_clouds()
+        self.spawn_aliens()
+        self.spawn_asteroids()
+        self.spawn_stars()
+        
+    def draw(self, canvas):
+        if self.updateCounter == False:
+            self.update()
+            self.updateCounter = True
+        for planet in self.planets_list:
+            planet.draw(canvas)
+        for star in self.star_list:
+            star.draw(canvas)
+        for cloud in self.cloud_list:
+            cloud.draw(canvas)
+        for alien in self.alien_list:
+            alien.draw(canvas)
+        for asteroid in self.asteroid_list:
+            asteroid.draw(canvas)
         
 class Interaction:
     def __init__(self, wheel, keyboard):
@@ -220,21 +240,19 @@ class Interaction:
 kbd = Keyboard()
 moon = Moon(Vector((WIDTH-745), (HEIGHT-530)), 40)
 inter = Interaction(moon, kbd)
-#planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
 background_img = simplegui.load_image("https://i.imgur.com/j4yZLIh.png")
+obstacle = ObstacleHandler()
+
+#------------
+#planet = Planet(Vector((WIDTH-600), (HEIGHT-200)), 40) ## test planet spawn
 #star = Star(Vector((WIDTH-100), (HEIGHT-100)), 40) # stick this into obstacle handler - randomise pos
-cloud = Cloud(Vector((WIDTH-450), (HEIGHT-400)), 40) #in obstacke handler - random pos below planets
-alien = Alien(Vector((WIDTH-150), (HEIGHT-500)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
-asteroid = Asteroid(Vector((WIDTH-250), (HEIGHT-250)), 40) #in obstacle handler - rotating in static pos ?
-obstacle= ObstacleHandler()
+#cloud = Cloud(Vector((WIDTH-450), (HEIGHT-400)), 40) #in obstacke handler - random pos below planets
+#alien = Alien(Vector((WIDTH-150), (HEIGHT-500)), 40) #in obstacle handler - coming from right edge in lvl 2&3 ?
+#asteroid = Asteroid(Vector((WIDTH-250), (HEIGHT-250)), 40) #in obstacle handler - rotating in static pos ?
+#------------
 
 def draw(canvas):
     canvas.draw_image(background_img, (2057/2, 1442/2), (2057, 1442), (400, 300), (850, 650))
-    #star.draw(canvas)
-    #planet.draw(canvas)
-    cloud.draw(canvas)
-    alien.draw(canvas)
-    asteroid.draw(canvas)
     obstacle.draw(canvas)
     inter.startgame()
     inter.update()
