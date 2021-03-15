@@ -21,6 +21,9 @@ class Obstacle:
     def draw(self, canvas):
         canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
         
+    def getPos(self):
+        return self.pos.get_p()
+        
 class Moon(Obstacle):
     def __init__(self, pos, radius = 10):
          super().__init__(pos, radius = 10)
@@ -35,9 +38,6 @@ class Moon(Obstacle):
         self.pos.add(self.vel)
         self.vel.multiply(0.85)
         self.vel.add(Vector(0, (self.gravity)))
-
-    def getPos(self):
-        return self.pos.get_p()
 
 class Planet(Obstacle):
     def __init__(self, pos, radius = 10):
