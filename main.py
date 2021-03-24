@@ -7,7 +7,7 @@ except ImportError:
 
 width = 800
 height = 600
-
+#GOTO LINE 220-235 TO CHANGE INITIAL SPAWNS AND LIMITS
 class Obstacle: #Parent class
     def __init__(self, pos):
         self.pos = pos
@@ -93,8 +93,8 @@ class Cloud(Obstacle):
         self.radius = 25
         self.goLeft = True
         self.goRight = False
-        self.level = 1
-        
+        self.level = 5
+
     def update(self):
         self.pos.add(self.vel)
         if self.pos.x <= 0:
@@ -110,7 +110,7 @@ class Cloud(Obstacle):
             self.vel.multiply(0.25)
             self.vel.add(Vector(self.level + 1, (0)))
             
-    def increaseDifficulty(self,i):
+    def increaseDifficulty(self, i):
         self.level = i/2
         
 class Alien(Obstacle):
@@ -174,10 +174,7 @@ class Wall(Obstacle): #Creates a limit wall to make player die when fall on it (
         self.edge = y + border
         
     def draw(self, canvas):
-        canvas.draw_line((0, self.y),
-                         (width, self.y),
-                         (2 * self.border + 1),
-                         self.colour)
+        canvas.draw_line((0, self.y), (width, self.y), (2 * self.border + 1), self.colour)
         
 class Keyboard:
     def __init__(self):
@@ -221,7 +218,7 @@ class ObstacleHandler: #Deals with drawing all the obstacles by placing them int
         self.spawnObjects = False
         self.planetLimit = 1
         self.planetList = [] 
-        self.starLimit = 1
+        self.starLimit = 2
         self.starList = []
         self.cloudLimit = 1
         self.cloudList = []
@@ -261,6 +258,11 @@ class ObstacleHandler: #Deals with drawing all the obstacles by placing them int
             self.vectorPosition = Vector(random.randrange(300, 700), random.randrange(100, 500))
             self.newCloud = Cloud(self.vectorPosition)
             self.addCloud(self.newCloud)
+    
+    def spawnSingleCloud(self):
+        self.vectorPosition = Vector(random.randrange(100, 750), random.randrange(50, 550))
+        self.newCloud = Cloud(self.vectorPosition)
+        self.addCloud(self.newCloud)
      
     def addCloud(self, i):
         self.cloudList.append(i)
@@ -270,6 +272,11 @@ class ObstacleHandler: #Deals with drawing all the obstacles by placing them int
             self.vectorPosition = Vector(random.randrange(700, 750), random.randrange(100, 500))
             self.newAlien = Alien(self.vectorPosition)
             self.addAlien(self.newAlien)
+            
+    def spawnSingleAlien(self):
+        self.vectorPosition = Vector(random.randrange(100, 750), random.randrange(50, 550))
+        self.newAlien = Alien(self.vectorPosition)
+        self.addAlien(self.newAlien) 
      
     def addAlien(self, i):
         self.alienList.append(i)
@@ -330,26 +337,29 @@ class ObstacleHandler: #Deals with drawing all the obstacles by placing them int
 class Interaction:
     def __init__(self,kbd):
         self.backgroundImg = simplegui.load_image("https://i.imgur.com/xOaLyeq.png") #Game Background
-        self.gameover = simplegui.load_image("https://i.imgur.com/LR3Weyg.png") #Game Over Screen
+        self.gameover = simplegui.load_image("https://i.imgur.com/WeQXoE8.png") #Game Over Screen
         self.hitStar = simplegui.load_sound('https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3')
         self.endSound = simplegui.load_sound('https://assets.mixkit.co/sfx/preview/mixkit-little-piano-game-over-1944.mp3')
         self.introSound = simplegui.load_sound('https://assets.mixkit.co/sfx/preview/mixkit-cinematic-transition-brass-hum-2282.mp3')
         self.wall = Wall(20, 800, 5, 'Red') #Creates a wall under the the screen to make player die when they fall
-        self.moon = Moon(Vector(50, 90))
+        self.moon = Moon(Vector(50, 75))
         self.obstacle = ObstacleHandler()
+        self.spaceFlag = True #Makes obstacles visible
         self.start = False
+        self.welcomeScreen = True
+        self.restartBool = False
+        self.musicFlag = True
+        self.startMainFlag = True
+        self.spawnCloudFlag = False
+        self.spawnAlienFlag = True
+        self.scoreArray = []
         self.kbd = kbd
         self.score = 0
         self.level = 1
-        self.lives = 100
-
-        self.welcomeScreen = True
-        self.restartBool = False
-        self.scoreArray = []
-        self.musicFlag = True
         self.musicCount = 1
-        self.spaceFlag = True #Makes obstacles visible
-        self.startMainFlag = True
+        self.lives = 100
+        self.alienCap = 3
+        self.cloudCap = 2
         
     def update(self):#Controls the player movement and detects the collisions 
         if self.start == True:
@@ -360,20 +370,20 @@ class Interaction:
             for i in self.obstacle.planetList:
                 if self.hit(self.moon, i):
                     self.lives -= 0.5
-                    self.moon.normalFace()
+                    self.moon.obstacleHitFace()
             for i in self.obstacle.cloudList:
                 if self.hit(self.moon, i):
-                    self.lives -= 0.5
-                    self.moon.obstacleHitFace()
+                    #self.lives -= 0.5
+                    self.moon.normalFace()
                 i.increaseDifficulty(self.level)
             for i in self.obstacle.alienList:
                 if self.hit(self.moon, i):
-                    self.lives -= 0.5
+                    self.lives -= 1
                     self.moon.obstacleHitFace()
                 i.increaseDifficulty(self.level)
             for i in self.obstacle.asteroidList:
                 if self.hit(self.moon, i):
-                    self.lives -= 0.5
+                    self.lives -= 1.5
                     self.moon.obstacleHitFace()
             for i in self.obstacle.starList:
                 count = 0
@@ -387,17 +397,27 @@ class Interaction:
                     if self.score % 5 == 0: #Change level difficulty
                         self.level += 1
                         self.lives += 20 #Increases player's health by 20 every 5 stars collected
-            if self.lives <= 0:
+            if self.level % 2 == 0 and (len(self.obstacle.cloudList) != self.cloudCap) : #Setup flag to spawn new cloud every 5th level up.
+                self.spawnCloudFlag = True
+            if self.spawnCloudFlag == True and self.level % 3 == 0:
+                self.spawnCloudFlag = False
+                self.obstacle.spawnSingleCloud() #Another cloud will spawn on level 3
+            if self.level % 4 == 0 and (len(self.obstacle.alienList)!= self.alienCap):
+                self.spawnAlienFlag = True
+            if self.spawnAlienFlag == True and self.level % 5 == 0:
+                self.spawnAlienFlag = False
+                self.obstacle.spawnSingleAlien() #Another alien will spawn on level 5 and 10 
+            if self.lives <= 0:#Dies if you have no more health points
                 self.moon.alive = False
-            elif self.hitWall(self.moon, self.wall):
+            elif self.hitWall(self.moon, self.wall): #Dies when you hit wall
                 self.moon.alive = False
             
     def introScreen(self, canvas): #Displays intro screen and updates flag to remove it.
-        self.intro = simplegui.load_image('https://i.imgur.com/DOKJ3eO.png') #Intro Screen 
+        self.intro = simplegui.load_image('https://i.imgur.com/yFGA3Sh.png') #Intro Screen 
         if self.kbd.m == False:
             self.introSound.play()
             self.introSound.set_volume(0.015)
-            canvas.draw_image(self.intro, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))
+            canvas.draw_image(self.intro, (1144/2, 719/2), (1144, 719), (400, 300), (930, 705)) #Setting Intro Screen dimensions 850, 650
         if self.kbd.m == True:
             self.startMainFlag = False   
     
@@ -440,19 +460,28 @@ class Interaction:
             self.startGame()
             self.update() 
             self.wall.draw(canvas)
-            if self.kbd.space == True:#Detects if spacebar has been pressed in order to display obstacles/stars
+            if self.kbd.space == True: #Detects if spacebar has been pressed in order to display obstacles/stars
                 self.spaceFlag = False
             if self.spaceFlag == True:
                 canvas.draw_text("START", (10, 25), 25, 'White', 'sans-serif')
                 canvas.draw_text("PRESS SPACE TO START", (100, 300), 50, 'White', 'sans-serif') #(10, 40), 10
+                canvas.draw_text("Avoid the aliens, the asteroids and the planet.", (200, 335), 20, 'White', 'sans-serif')
+                canvas.draw_text("Collect stars for points!", (290, 355), 20, 'White', 'sans-serif')
             if self.spaceFlag == False:
                 self.obstacle.draw(canvas) #if statement for when game is started
+                canvas.draw_text("Stars: %s" % self.score, (680, 25), 23, 'Yellow', 'sans-serif') #Displays number of stars collected
+                canvas.draw_text("Level: %s" % self.level, (680, 50), 20, 'White', 'sans-serif') #Displays the level the user is on
+                canvas.draw_text("Health: %s" % self.lives, (680, 75), 20, 'LightGreen', 'sans-serif') #Displays the health the user has 
             self.moon.update()
             self.moon.draw(canvas)
-            canvas.draw_text("Stars: %s" % self.score, (680, 25), 23, 'Yellow', 'sans-serif')
-            canvas.draw_text("Level: %s" % self.level, (680, 50), 20, 'White', 'sans-serif')
-            canvas.draw_text("Health: %s" % self.lives, (680, 75), 20, 'LightGreen', 'sans-serif')
-            if self.lives <= 0:
+            if self.score != 0: #Makes sure "+20" doesnt show at start of game
+                if self.score % 5 == 0:
+                    canvas.draw_text("+20", (770, 90), 15, 'LightGreen', 'sans-serif') #Tells the user +20 health has been added
+                if self.level == 5 :
+                    canvas.draw_text("An alien has appeared!", (230, 50), 30, 'Red', 'sans-serif')
+                if self.level == 10:
+                    canvas.draw_text("Another alien has appeared!", (200, 50), 30, 'Red', 'sans-serif')
+            if self.lives <= 0: #Resets game when lives are 0
                 self.reset(canvas)
         
     def reset(self,canvas):
@@ -465,17 +494,17 @@ class Interaction:
         if self.musicFlag == False:
             self.endSound.pause()		
         self.scoreArray.append(self.score)
-        self.scoreArray.sort(reverse = True) ### Highest ot lowest 
-        canvas.draw_image(self.gameover, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))
-        canvas.draw_text("Total Stars: %s" % self.score, (355, 470), 20, 'Yellow', 'sans-serif')
-        canvas.draw_text("Highest Score: %s" % self.scoreArray[0] , (355, 490), 15, 'White', 'sans-serif')
+        self.scoreArray.sort(reverse = True) ### highscore list.
+        canvas.draw_image(self.gameover, (1144/2, 719/2), (1144, 719), (400, 300), (950, 705))
+        canvas.draw_text("Total Stars: %s" % self.score, (355, 490), 20, 'white', 'sans-serif')
+        canvas.draw_text("Highest Score: %s" % self.scoreArray[0] , (359, 510), 15, 'White', 'sans-serif')
         if self.kbd.r == True:
             self.restartBool = True
-        if self.restartBool == True: ## Reset obstacle array. create reset func in obstacle.
+        if self.restartBool == True: ## Reset obstacle array. create reset func in obstacle. RESET EVERYTHING
             self.lives = 100
             self.level = 1
             self.score = 0
-            self.moon = Moon(Vector(50, 90))
+            self.moon = Moon(Vector(50, 75))
             self.obstacle = ObstacleHandler()
             self.start = False
             self.moon.alive = True
