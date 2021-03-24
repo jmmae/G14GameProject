@@ -7,7 +7,7 @@ except ImportError:
 
 width = 800
 height = 600
-#GOTO LINE 220-235 TO CHANGE INITIAL SPAWNS AND LIMITS
+
 class Obstacle: #Parent class
     def __init__(self, pos):
         self.pos = pos
@@ -35,7 +35,7 @@ class Moon(Obstacle): #Main player class
         self.imgRotation = 0
         self.step = 0.1
         
-    def update(self):
+    def update(self):   #Vertical displacement of the moon due to gravity
         if self.alive == True:
             self.pos.add(self.vel)
             self.vel.multiply(0.85)
@@ -44,18 +44,18 @@ class Moon(Obstacle): #Main player class
     def draw(self,canvas):
         canvas.draw_image(self.img, self.imgCenter, self.imgDims, self.pos.get_p(), self.imgDestDims, self.imgRotation) #imgRotation rotates the image
 
-    def getPos(self):
+    def getPos(self): #Returns position of the moon
         return self.pos.get_p()
     
     def offset_d(self):
         return self.pos.y - self.radius
     
-    def normalFace(self):
+    def normalFace(self): 
         self.img = simplegui.load_image('https://i.imgur.com/V8bTliT.png') #Normal Face
         self.imgCenter = (313, 296)
         self.imgDims = (626, 592) 
         
-    def starPickupFace(self):
+    def starPickupFace(self): #Moon png when it picks up a star
         self.img = simplegui.load_image("https://i.imgur.com/JppwJQX.png") #Heart Face
         self.imgCenter = (313, 296)
         self.imgDims = (626, 592)
@@ -95,7 +95,7 @@ class Cloud(Obstacle):
         self.goRight = False
         self.level = 5
 
-    def update(self):
+    def update(self):  #Set movement path for the cloud (horizontal)          
         self.pos.add(self.vel)
         if self.pos.x <= 0:
             self.goLeft = False
@@ -140,7 +140,7 @@ class Alien(Obstacle):
             self.vel.multiply(0.25)
             self.vel.add(Vector(self.level+ 5, (0)))
             
-    def increaseDifficulty(self,i): # Increase speed of obstacle as levels increase
+    def increaseDifficulty(self,i): #Increase speed of obstacle as levels increase
         self.level = i/2
         
 class Asteroid(Obstacle):
@@ -176,7 +176,7 @@ class Wall(Obstacle): #Creates a limit wall to make player die when fall on it (
     def draw(self, canvas):
         canvas.draw_line((0, self.y), (width, self.y), (2 * self.border + 1), self.colour)
         
-class Keyboard:
+class Keyboard: #Keyboard initialisation
     def __init__(self):
         self.right = False
         self.left = False
@@ -218,7 +218,7 @@ class ObstacleHandler: #Deals with drawing all the obstacles by placing them int
         self.spawnObjects = False
         self.planetLimit = 1
         self.planetList = [] 
-        self.starLimit = 2
+        self.starLimit = 6
         self.starList = []
         self.cloudLimit = 1
         self.cloudList = []
@@ -485,7 +485,7 @@ class Interaction:
                 self.reset(canvas)
         
     def reset(self,canvas):
-        if self.musicFlag == True:
+        if self.musicFlag == True: #Plays gameover music for 1 loop.
             self.endSound.play()
             self.endSound.set_volume(0.05)
             self.musicCount += 1
@@ -494,13 +494,14 @@ class Interaction:
         if self.musicFlag == False:
             self.endSound.pause()		
         self.scoreArray.append(self.score)
-        self.scoreArray.sort(reverse = True) ### highscore list.
+        self.scoreArray.sort(reverse = True) #Highscore list.
         canvas.draw_image(self.gameover, (1144/2, 719/2), (1144, 719), (400, 300), (950, 705))
-        canvas.draw_text("Total Stars: %s" % self.score, (355, 490), 20, 'white', 'sans-serif')
-        canvas.draw_text("Highest Score: %s" % self.scoreArray[0] , (359, 510), 15, 'White', 'sans-serif')
+        canvas.draw_text("Level Reached: Level %s" % self.level, (316, 490), 18, 'black', 'sans-serif')
+        canvas.draw_text("Total Stars: %s" % self.score, (351, 510), 18, 'black', 'sans-serif')
+        canvas.draw_text("Highest Score: %s" % self.scoreArray[0] , (323, 530), 18, 'black', 'sans-serif')
         if self.kbd.r == True:
             self.restartBool = True
-        if self.restartBool == True: ## Reset obstacle array. create reset func in obstacle. RESET EVERYTHING
+        if self.restartBool == True: #Reset obstacle array. create reset func in obstacle. RESET EVERYTHING
             self.lives = 100
             self.level = 1
             self.score = 0
