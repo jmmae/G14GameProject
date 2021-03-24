@@ -218,7 +218,7 @@ class ObstacleHandler: #Deals with drawing all the obstacles by placing them int
         self.spawnObjects = False
         self.planetLimit = 1
         self.planetList = [] 
-        self.starLimit = 6
+        self.starLimit = 3
         self.starList = []
         self.cloudLimit = 1
         self.cloudList = []
@@ -373,7 +373,7 @@ class Interaction:
                     self.moon.obstacleHitFace()
             for i in self.obstacle.cloudList:
                 if self.hit(self.moon, i):
-                    #self.lives -= 0.5
+                    #self.lives -= 0.5 #Removed point deduction for clouds
                     self.moon.normalFace()
                 i.increaseDifficulty(self.level)
             for i in self.obstacle.alienList:
