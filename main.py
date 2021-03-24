@@ -5,44 +5,44 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
-WIDTH = 800
-HEIGHT = 600
+width = 800
+height = 600
 
 class Obstacle: #Parent class
     def __init__(self, pos):
         self.pos = pos
         self.vel = Vector()
         self.radius = None
-        self.IMG = None
-        self.IMG_CENTRE = None
-        self.IMG_DIMS = None
-        self.img_dest_dim = None
+        self.img = None
+        self.imgCenter = None
+        self.imgDims = None
+        self.imgDestDims = None
         
     def draw(self, canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim)
+        canvas.draw_image(self.img, self.imgCenter, self.imgDims, self.pos.get_p(), self.imgDestDims)
         
-class Moon(Obstacle): #MAIN PLAYER CLASS
+class Moon(Obstacle): #Main player class
     def __init__(self, pos):
         super().__init__(pos)
-        self.IMG = simplegui.load_image('https://i.imgur.com/V8bTliT.png') #MOON
-        self.IMG_CENTRE = (313, 296)
-        self.IMG_DIMS = (626, 592)
-        self.img_dest_dim = (100, 100)
+        self.img = simplegui.load_image('https://i.imgur.com/V8bTliT.png') #Moon
+        self.imgCenter = (313, 296)
+        self.imgDims = (626, 592)
+        self.imgDestDims= (100, 100)
         self.gravity = 0
-        self.ALIVE = True
+        self.alive = True
         self.radius = 50   
         self.state = "normal"
-        self.img_rot = 0
+        self.imgRotation = 0
         self.step = 0.1
         
     def update(self):
-        if self.ALIVE == True:
+        if self.alive == True:
             self.pos.add(self.vel)
             self.vel.multiply(0.85)
             self.vel.add(Vector(0, (self.gravity)))
             
     def draw(self,canvas):
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim, self.img_rot) #img_rot rotates the image
+        canvas.draw_image(self.img, self.imgCenter, self.imgDims, self.pos.get_p(), self.imgDestDims, self.imgRotation) #imgRotation rotates the image
 
     def getPos(self):
         return self.pos.get_p()
@@ -51,45 +51,45 @@ class Moon(Obstacle): #MAIN PLAYER CLASS
         return self.pos.y - self.radius
     
     def normalFace(self):
-        self.IMG = simplegui.load_image('https://i.imgur.com/V8bTliT.png')
-        self.IMG_CENTRE = (313, 296)
-        self.IMG_DIMS = (626, 592)	#MOON
+        self.img = simplegui.load_image('https://i.imgur.com/V8bTliT.png') #Normal Face
+        self.imgCenter = (313, 296)
+        self.imgDims = (626, 592) 
         
     def starPickupFace(self):
-        self.IMG = simplegui.load_image("https://i.imgur.com/JppwJQX.png")
-        self.IMG_CENTRE = (313, 296)
-        self.IMG_DIMS = (626, 592)
+        self.img = simplegui.load_image("https://i.imgur.com/JppwJQX.png") #Heart Face
+        self.imgCenter = (313, 296)
+        self.imgDims = (626, 592)
         
     def obstacleHitFace(self):
-        self.IMG = simplegui.load_image("https://i.imgur.com/5gPFvX7.png")
-        self.IMG_CENTRE = (313, 296)
-        self.IMG_DIMS = (626, 592)
+        self.img = simplegui.load_image("https://i.imgur.com/5gPFvX7.png") #Surprised Face
+        self.imgCenter = (313, 296)
+        self.imgDims = (626, 592)
         
 class Planet(Obstacle):
     def __init__(self, pos):
         super().__init__(pos)
-        self.IMG = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #PLANET
-        self.IMG_CENTRE = (273/2, 188/2)
-        self.IMG_DIMS = (273, 188)
-        self.img_dest_dim = (140, 96)
+        self.img = simplegui.load_image('https://i.imgur.com/nh8zRKw.png') #Planet
+        self.imgCenter = (273/2, 188/2)
+        self.imgDims = (273, 188)
+        self.imgDestDims = (140, 96)
         self.radius = 50
 
 class Star(Obstacle):
     def __init__(self, pos):
         super().__init__(pos)
-        self.IMG = simplegui.load_image('https://i.imgur.com/MsKwX7I.png ') #STAR
-        self.IMG_CENTRE = (113/2, 112/2)
-        self.IMG_DIMS = (113, 112)
-        self.img_dest_dim = (46, 46)
+        self.img = simplegui.load_image('https://i.imgur.com/MsKwX7I.png ') #Star
+        self.imgCenter = (113/2, 112/2)
+        self.imgDims = (113, 112)
+        self.imgDestDims = (46, 46)
         self.radius = 23
         
 class Cloud(Obstacle):
     def __init__(self, pos):
         super().__init__(pos)
-        self.IMG = simplegui.load_image('https://i.imgur.com/hLxKYTT.png') #CLOUD
-        self.IMG_CENTRE = (250/2, 127/2)
-        self.IMG_DIMS = (250, 127)
-        self.img_dest_dim = (86, 46)
+        self.img = simplegui.load_image('https://i.imgur.com/hLxKYTT.png') #Cloud
+        self.imgCenter = (250/2, 127/2)
+        self.imgDims = (250, 127)
+        self.imgDestDims = (86, 46)
         self.radius = 25
         self.goLeft = True
         self.goRight = False
@@ -116,19 +116,17 @@ class Cloud(Obstacle):
 class Alien(Obstacle):
     def __init__(self, pos):
         super().__init__(pos)
-        self.IMG = simplegui.load_image('https://i.imgur.com/8OwD4yc.png') #ALIEN
-        self.IMG_CENTRE = (229/2, 172/2)
-        self.IMG_DIMS = (229, 172)
-        self.img_dest_dim = (88, 48)
+        self.img = simplegui.load_image('https://i.imgur.com/8OwD4yc.png') #Alien
+        self.imgCenter = (229/2, 172/2)
+        self.imgDims = (229, 172)
+        self.imgDestDims = (88, 48)
         self.radius = 35 
         self.goLeft = True
         self.goRight = False
         self.level = 1
         
-    def update(self): #BUILT IN HORIZONTAL EDGE DETECTION
+    def update(self): #Built in horizontal edge direction
         self.pos.add(self.vel)
-        #self.vel.multiply(0.25)
-        #self.vel.add(Vector(-1, (0)))
         if self.pos.x <= 0:
             self.goLeft = False
             self.goRight = True
@@ -142,31 +140,30 @@ class Alien(Obstacle):
             self.vel.multiply(0.25)
             self.vel.add(Vector(self.level+ 5, (0)))
             
-    def increaseDifficulty(self,i): # INCREASE SPEED OF OBSTACLE AS LEVELS INCREASE
-        self.level = i /2
+    def increaseDifficulty(self,i): # Increase speed of obstacle as levels increase
+        self.level = i/2
         
 class Asteroid(Obstacle):
     def __init__(self, pos):
         super().__init__(pos)
-        self.IMG = simplegui.load_image('https://i.imgur.com/SBgHMg9.png') #ASTEROID
-        self.IMG_CENTRE = (156/2, 147/2)
-        self.IMG_DIMS = (156, 147)
-        self.img_dest_dim = (68, 48)
+        self.img = simplegui.load_image('https://i.imgur.com/SBgHMg9.png') #Asteroids
+        self.imgCenter = (156/2, 147/2)
+        self.imgDims = (156, 147)
+        self.imgDestDims = (68, 48)
         self.radius = 25
         self.angle = random.randrange(-5, 5)
         self.speed = random.randrange(2, 6)
-        self.img_rot = 0
-        self.STEP = 0.1
+        self.imgRotation = 0
+        self.step = 0.1
         
     def update(self):
         self.pos.add(self.vel)
         self.vel.multiply(0.25)
         self.vel.add(Vector(self.angle, (self.speed))) #Gives asteroid random direction and random speed
         
-        #Draw handler
-    def draw(self,canvas):
-        self.img_rot += self.STEP #Increase rotation 
-        canvas.draw_image(self.IMG, self.IMG_CENTRE, self.IMG_DIMS, self.pos.get_p(), self.img_dest_dim, self.img_rot) #img_rot rotates the image
+    def draw(self,canvas): #Draw handler
+        self.imgRotation += self.step #Increase rotation 
+        canvas.draw_image(self.img, self.imgCenter, self.imgDims, self.pos.get_p(), self.imgDestDims, self.imgRotation) #img_rot rotates the image
         
 class Wall(Obstacle): #Creates a limit wall to make player die when fall on it (out of bounds of screen)
     def __init__(self, x, y, border, colour):
@@ -178,7 +175,7 @@ class Wall(Obstacle): #Creates a limit wall to make player die when fall on it (
         
     def draw(self, canvas):
         canvas.draw_line((0, self.y),
-                         (WIDTH, self.y),
+                         (width, self.y),
                          (2 * self.border + 1),
                          self.colour)
         
@@ -218,164 +215,167 @@ class Keyboard:
         if key == simplegui.KEY_MAP['R']:
             self.r = False 
             
-class ObstacleHandler: #DEALS WITH DRAWING ALL THE OBSTACLES BY PLACING THEM INTO SEPERATE ARRAYS.
-                        #ALSO HANDLES UPDATES OF ALL OBSTACLES.
-    def __init__(self):
-        self.spawnobjects = False
+class ObstacleHandler: #Deals with drawing all the obstacles by placing them into separate arrays
+                        #Also handles updates of all obstacles
+    def __init__(self): #Can modify the limit to change game difficulty (add more obstacles)
+        self.spawnObjects = False
         self.planetLimit = 1
-        self.planets_list = [] 
+        self.planetList = [] 
         self.starLimit = 1
-        self.star_list = []
+        self.starList = []
         self.cloudLimit = 1
-        self.cloud_list = []
+        self.cloudList = []
         self.alienLimit = 1
-        self.alien_list = []
+        self.alienList = []
         self.asteroidLimit = 2
-        self.asteroid_list = []
+        self.asteroidList = []
         self.starRemoval = []
         self.lives = []
         self.walls = []
         
-    def spawn_planets(self):
+    def spawnPlanets(self):
         for i in range(0, self.planetLimit):
-            self.vectorPosition = Vector(random.randrange(170, 750), random.randrange(100, 500))
+            self.vectorPosition = Vector(random.randrange(170, 730), random.randrange(120, 450))
             self.newPlanet = Planet(self.vectorPosition)
-            self.add_planet(self.newPlanet)
+            self.addPlanet(self.newPlanet)
        
-    def add_planet(self,i):
-        self.planets_list.append(i)
+    def addPlanet(self,i):
+        self.planetList.append(i)
         
-    def spawn_stars(self):
+    def spawnStars(self):
         for i in range(0, self.starLimit):
             self.vectorPosition = Vector(random.randrange(100, 750), random.randrange(50, 550))
             self.newStar = Star(self.vectorPosition)
-            self.add_star(self.newStar)
+            self.addStars(self.newStar)
             
     def spawnSingleStar(self):
             self.vectorPosition = Vector(random.randrange(100, 750), random.randrange(50, 550))
             self.newStar = Star(self.vectorPosition)
-            self.add_star(self.newStar) 
+            self.addStars(self.newStar) 
             
-    def add_star(self, i):
-        self.star_list.append(i)
+    def addStars(self, i):
+        self.starList.append(i)
         
-    def spawn_clouds(self):
+    def spawnClouds(self):
         for i in range(0, self.cloudLimit):
             self.vectorPosition = Vector(random.randrange(300, 700), random.randrange(100, 500))
             self.newCloud = Cloud(self.vectorPosition)
-            self.add_cloud(self.newCloud)
+            self.addCloud(self.newCloud)
      
-    def add_cloud(self, i):
-        self.cloud_list.append(i)
+    def addCloud(self, i):
+        self.cloudList.append(i)
         
-    def spawn_aliens(self):
+    def spawnAliens(self):
         for i in range(0, self.alienLimit):
             self.vectorPosition = Vector(random.randrange(700, 750), random.randrange(100, 500))
             self.newAlien = Alien(self.vectorPosition)
-            self.add_alien(self.newAlien)
+            self.addAlien(self.newAlien)
      
-    def add_alien(self, i):
-        self.alien_list.append(i)
+    def addAlien(self, i):
+        self.alienList.append(i)
         
-    def spawn_asteroids(self):
+    def spawnAsteroids(self):
         for i in range(0, self.asteroidLimit):
-            self.vectorPosition = Vector(random.randrange(0, 800), random.randrange(-100,0))
+            self.vectorPosition = Vector(random.randrange(0, 800), random.randrange(-100, 0))
             self.newAsteroid = Asteroid(self.vectorPosition)
-            self.add_asteroids(self.newAsteroid)
+            self.addAsteroids(self.newAsteroid)
             
-    def spawnsingle_asteroid(self):
-        self.vectorPosition = Vector(random.randrange(0, 800), random.randrange(-100,0))
+    def spawnSingleAsteroid(self):
+        self.vectorPosition = Vector(random.randrange(0, 800), random.randrange(-100, 0))
         self.newAsteroid = Asteroid(self.vectorPosition)
-        self.add_asteroids(self.newAsteroid)
+        self.addAsteroids(self.newAsteroid)
             
-    def add_asteroids(self, i):
-        self.asteroid_list.append(i)
+    def addAsteroids(self, i):
+        self.asteroidList.append(i)
         
     def starRemover(self, i): #Checks if star is in list, if it is, deletes it
-        for k in self.star_list:
+        for k in self.starList:
             if k == i:
-                self.star_list.remove(k)
+                self.starList.remove(k)
     
     def initalspawn(self): #Set up the map       
-        self.spawn_planets()
-        self.spawn_clouds()
-        self.spawn_aliens()
-        self.spawn_asteroids()
-        self.spawn_stars()
-        
-    def update(self): # Deals with moving obstacles
-        for alien in self.alien_list:
+        self.spawnPlanets()
+        self.spawnClouds()
+        self.spawnAliens()
+        self.spawnAsteroids()
+        self.spawnStars()
+    
+    def update(self): #Deals with moving obstacles
+        for alien in self.alienList:
             alien.update()
-        for cloud in self.cloud_list:
+        for cloud in self.cloudList:
             cloud.update()
-        for asteroid in self.asteroid_list:
+        for asteroid in self.asteroidList:
             asteroid.update()
             if asteroid.pos.x > 820 or asteroid.pos.x < 0 or asteroid.pos.y > 620:
-                self.spawnsingle_asteroid()
-                self.asteroid_list.remove(asteroid)
+                self.spawnSingleAsteroid()
+                self.asteroidList.remove(asteroid)
                 
     def draw(self, canvas): #Draws all obstacles on canvas
-        if self.spawnobjects == False:
+        if self.spawnObjects == False:
             self.initalspawn()
-            self.spawnobjects = True
-        for planet in self.planets_list:
+            self.spawnObjects = True
+        for planet in self.planetList:
             planet.draw(canvas)
-        for star in self.star_list:
+        for star in self.starList:
             star.draw(canvas)
-        for cloud in self.cloud_list:
+        for cloud in self.cloudList:
             cloud.draw(canvas)
-        for alien in self.alien_list:
+        for alien in self.alienList:
             alien.draw(canvas)
-        for asteroid in self.asteroid_list:
+        for asteroid in self.asteroidList:
             asteroid.draw(canvas)
         self.update()
         
 class Interaction:
     def __init__(self,kbd):
-        self.kbd = kbd
-        self.moon = Moon(Vector(50, 90))
-        self.background_img = simplegui.load_image("https://i.imgur.com/xOaLyeq.png") #("https://i.imgur.com/j4yZLIh.png") - Old Background
-        self.gameover = simplegui.load_image("https://i.imgur.com/LR3Weyg.png")
-        self.obstacle = ObstacleHandler()
-        self.START = False
-        self.score = 0
-        self.level = 1
-        self.lives = 100
-        self.wall = Wall(20, 800, 5, 'Red')
+        self.backgroundImg = simplegui.load_image("https://i.imgur.com/xOaLyeq.png") #Game Background
+        self.gameover = simplegui.load_image("https://i.imgur.com/LR3Weyg.png") #Game Over Screen
         self.hitStar = simplegui.load_sound('https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3')
         self.endSound = simplegui.load_sound('https://assets.mixkit.co/sfx/preview/mixkit-little-piano-game-over-1944.mp3')
         self.introSound = simplegui.load_sound('https://assets.mixkit.co/sfx/preview/mixkit-cinematic-transition-brass-hum-2282.mp3')
+        self.wall = Wall(20, 800, 5, 'Red') #Creates a wall under the the screen to make player die when they fall
+        self.moon = Moon(Vector(50, 90))
+        self.obstacle = ObstacleHandler()
+        self.start = False
+        self.kbd = kbd
+        self.score = 0
+        self.level = 1
+        self.lives = 100
+
         self.welcomeScreen = True
-        self.restartbool = False
-        self.scorearray = []
+        self.restartBool = False
+        self.scoreArray = []
         self.musicFlag = True
         self.musicCount = 1
-        self.spaceFlag = True
-    
-    def update(self):
-        if self.START == True:
+        self.spaceFlag = True #Makes obstacles visible
+        self.startMainFlag = True
+        
+    def update(self):#Controls the player movement and detects the collisions 
+        if self.start == True:
             self.keyboardinp()
-            self.moon.gravity = 1
+            self.moon.gravity = 1 #Gives the moon gravity
             self.count = 0
-            for i in self.obstacle.planets_list:
+            #Applys penalties and rewards
+            for i in self.obstacle.planetList:
                 if self.hit(self.moon, i):
                     self.lives -= 0.5
                     self.moon.normalFace()
-            for i in self.obstacle.cloud_list:
+            for i in self.obstacle.cloudList:
                 if self.hit(self.moon, i):
                     self.lives -= 0.5
                     self.moon.obstacleHitFace()
                 i.increaseDifficulty(self.level)
-            for i in self.obstacle.alien_list:
+            for i in self.obstacle.alienList:
                 if self.hit(self.moon, i):
                     self.lives -= 0.5
                     self.moon.obstacleHitFace()
                 i.increaseDifficulty(self.level)
-            for i in self.obstacle.asteroid_list:
+            for i in self.obstacle.asteroidList:
                 if self.hit(self.moon, i):
                     self.lives -= 0.5
                     self.moon.obstacleHitFace()
-            for i in self.obstacle.star_list:
+            for i in self.obstacle.starList:
                 count = 0
                 if self.hit(self.moon, i):
                     self.hitStar.play()
@@ -384,119 +384,113 @@ class Interaction:
                     self.score += 1
                     self.obstacle.starRemover(i)
                     self.obstacle.spawnSingleStar()
-                    if self.score % 5 == 0: #change level difficulty
+                    if self.score % 5 == 0: #Change level difficulty
                         self.level += 1
-                        self.lives += 20
+                        self.lives += 20 #Increases player's health by 20 every 5 stars collected
             if self.lives <= 0:
-                self.moon.ALIVE = False
-            elif self.hit_wall(self.moon, self.wall):
-                self.moon.ALIVE = False
+                self.moon.alive = False
+            elif self.hitWall(self.moon, self.wall):
+                self.moon.alive = False
             
-    def introScreen(self, canvas):
-        self.intro = simplegui.load_image('https://i.imgur.com/DOKJ3eO.png')
+    def introScreen(self, canvas): #Displays intro screen and updates flag to remove it.
+        self.intro = simplegui.load_image('https://i.imgur.com/DOKJ3eO.png') #Intro Screen 
         if self.kbd.m == False:
             self.introSound.play()
             self.introSound.set_volume(0.015)
             canvas.draw_image(self.intro, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))
-                
-    def hit(self, b1, b2):
-        sep_vec = b1.pos.copy().subtract(b2.pos)
-        return sep_vec.length() < b1.radius + b2.radius
-        #offset1 = b1.pos + b1.radius
-        #return b1.pos + b1.radius >= b2.pos+b2.radius or b1.pos + b1.radius <= b2.pos-b2.radius
+        if self.kbd.m == True:
+            self.startMainFlag = False   
+    
+    def hit(self, b1, b2): #Used to detect collisions
+        sepVec = b1.pos.copy().subtract(b2.pos)
+        return sepVec.length() < b1.radius + b2.radius
+        #Version 2:
+        #Offset1 = b1.pos + b1.radius
+        #Return b1.pos + b1.radius >= b2.pos+b2.radius or b1.pos + b1.radius <= b2.pos-b2.radius
         
-    def hit_wall(self, m1, wall):
+    def hitWall(self, m1, wall):
          return m1.offset_d() >= self.wall.edge
     
-    def startgame(self):
+    def startGame(self):
         if self.kbd.space == True:
-            self.START = True 
+            self.start = True 
     
-    def tick(self):
-        for i in self.obstacle.star_list:
+    def tick(self): #Timer - every tick it will randomise the star position
+        for i in self.obstacle.starList:
             i.pos = Vector(random.randrange(170, 600), random.randrange(100, 500))
          
     def keyboardinp(self):
         if self.kbd.right:
             self.moon.vel.add(Vector(1, 0))
-            if self.moon.img_rot < 0.5:
-                print(self.moon.img_rot)
-                self.moon.img_rot += self.moon.step
+            if self.moon.imgRotation < 0.5:
+                self.moon.imgRotation += self.moon.step #Rotates the moon to the right up to a certain point
         if self.kbd.left:
             self.moon.vel.add(Vector(-1, 0))
-            if self.moon.img_rot > -0.5:
-                print(self.moon.img_rot)
-                self.moon.img_rot -= self.moon.step
+            if self.moon.imgRotation > -0.5:
+                self.moon.imgRotation -= self.moon.step #Rotates the moon to the left up to a certain point
         if self.kbd.up:
             self.moon.vel.add(Vector(0, (-3.5)))
                   
-    def Maingame(self, canvas):
-        canvas.draw_image(self.background_img, (1564/2, 1123/2), (1564, 1123), (400, 300), (900, 700))
-        self.restartbool = False
-        self.startgame()
-        self.obstacle.draw(canvas) # if statement for when game is started
-        self.update()
-        self.moon.update()
-        self.moon.draw(canvas)
-        self.wall.draw(canvas)
-        if self.kbd.space == True:
-            self.spaceFlag = False
-        if self.spaceFlag == True:
-            canvas.draw_text("START", (10, 25), 25, 'White', 'sans-serif')
-            canvas.draw_text("PRESS SPACE TO START", (10, 40), 10, 'White', 'sans-serif')
-        canvas.draw_text("Stars: %s" % self.score, (680, 25), 23, 'Yellow', 'sans-serif')
-        canvas.draw_text("Level: %s" % self.level, (680, 50), 20, 'White', 'sans-serif')
-        canvas.draw_text("Health: %s" % self.lives, (680, 75), 20, 'LightGreen', 'sans-serif')
-        if self.lives <= 0:
-            self.reset(canvas)
-        #welcome
-        #main game loop
-        #gameover + restart
+    def mainGame(self, canvas):
+        if self.startMainFlag == True:
+            self.introScreen(canvas)
+        if self.startMainFlag == False:
+            canvas.draw_image(self.backgroundImg, (1564/2, 1123/2), (1564, 1123), (400, 300), (900, 700)) #Sets dimensions of game background screen
+            self.restartBool = False
+            self.startGame()
+            self.update() 
+            self.wall.draw(canvas)
+            if self.kbd.space == True:#Detects if spacebar has been pressed in order to display obstacles/stars
+                self.spaceFlag = False
+            if self.spaceFlag == True:
+                canvas.draw_text("START", (10, 25), 25, 'White', 'sans-serif')
+                canvas.draw_text("PRESS SPACE TO START", (100, 300), 50, 'White', 'sans-serif') #(10, 40), 10
+            if self.spaceFlag == False:
+                self.obstacle.draw(canvas) #if statement for when game is started
+            self.moon.update()
+            self.moon.draw(canvas)
+            canvas.draw_text("Stars: %s" % self.score, (680, 25), 23, 'Yellow', 'sans-serif')
+            canvas.draw_text("Level: %s" % self.level, (680, 50), 20, 'White', 'sans-serif')
+            canvas.draw_text("Health: %s" % self.lives, (680, 75), 20, 'LightGreen', 'sans-serif')
+            if self.lives <= 0:
+                self.reset(canvas)
         
     def reset(self,canvas):
-        self.endSound.play()
-        self.endSound.set_volume(0.05)
         if self.musicFlag == True:
+            self.endSound.play()
+            self.endSound.set_volume(0.05)
             self.musicCount += 1
-        if self.musicCount > 140:
+        if self.musicCount > 120:
             self.musicFlag = False
         if self.musicFlag == False:
             self.endSound.pause()		
-        self.scorearray.append(self.score)
-        self.scorearray.sort(reverse = True) ### highest ot lowest 
+        self.scoreArray.append(self.score)
+        self.scoreArray.sort(reverse = True) ### Highest ot lowest 
         canvas.draw_image(self.gameover, (1144/2, 719/2), (1144, 719), (400, 300), (850, 650))
         canvas.draw_text("Total Stars: %s" % self.score, (355, 470), 20, 'Yellow', 'sans-serif')
-        canvas.draw_text("Highest Score: %s" % self.scorearray[0] , (355, 490), 15, 'White', 'sans-serif')
-        #DISPLAY 
+        canvas.draw_text("Highest Score: %s" % self.scoreArray[0] , (355, 490), 15, 'White', 'sans-serif')
         if self.kbd.r == True:
-            self.restartbool = True
-        if self.restartbool == True:
+            self.restartBool = True
+        if self.restartBool == True: ## Reset obstacle array. create reset func in obstacle.
             self.lives = 100
             self.level = 1
             self.score = 0
             self.moon = Moon(Vector(50, 90))
-            self.START = False
-            self.moon.ALIVE = True
+            self.obstacle = ObstacleHandler()
+            self.start = False
+            self.moon.alive = True
             self.musicCount = 0
             self.musicFlag = True
             self.spaceFlag = True
             
     def draw(self,canvas):
-        if self.moon.ALIVE == True:
-            self.Maingame(canvas)
-            self.introScreen(canvas)
-        elif self.moon.ALIVE == False:
-            #self.scorearray.append(self.score)
-            #self.gameoverscreen
-            #if self.kbd.r == True:
+        if self.moon.alive == True:
+            self.mainGame(canvas)
+        elif self.moon.alive == False:
             self.reset(canvas)
-
-#MOON 2 = https://i.imgur.com/TYO0N2J.jpg - for when you crash into obstacles
-#canvas.draw_image('https://i.imgur.com/TYO0N2J.jpg', (196/2, 195/2), (196, 195), (x, y), (100, 100))
-#MOON 3 = https://i.imgur.com/hOFOsDk.jpg - for when you hit a star
-
-frame = simplegui.create_frame('HOPPY MOON', WIDTH, HEIGHT)
-label1 = frame.add_label('WECLOME TO HOPPY MOON!')
+            
+frame = simplegui.create_frame('HOPPY MOON', width, height)
+label1 = frame.add_label('WELCOME TO HOPPY MOON!')
 label2 = frame.add_label('', 400)
 label3 = frame.add_label('Instructions:')
 label4 = frame.add_label('1. Use arrow keys to move.')
