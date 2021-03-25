@@ -411,7 +411,9 @@ class Interaction:
                 self.moon.alive = False
             elif self.hitWall(self.moon, self.wall): #Dies when you hit wall
                 self.moon.alive = False
-            
+            if self.moon.pos.x >900 or self.moon.pos.y < -100 or self.moon.pos.x < -100: #L,R,U OUTOFBOUND CHECK
+                self.moon.alive = False
+
     def introScreen(self, canvas): #Displays intro screen and updates flag to remove it.
         self.intro = simplegui.load_image('https://i.imgur.com/yFGA3Sh.png') #Intro Screen 
         if self.kbd.m == False:
