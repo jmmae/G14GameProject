@@ -492,7 +492,8 @@ class Interaction:
         if self.musicCount > 120:
             self.musicFlag = False
         if self.musicFlag == False:
-            self.endSound.pause()		
+            self.endSound.rewind()
+            #self.endSound.pause()		
         self.scoreArray.append(self.score)
         self.scoreArray.sort(reverse = True) #Highscore list.
         canvas.draw_image(self.gameover, (1144/2, 719/2), (1144, 719), (400, 300), (950, 705))
@@ -512,6 +513,7 @@ class Interaction:
             self.musicCount = 0
             self.musicFlag = True
             self.spaceFlag = True
+            self.introSound.play()
             
     def draw(self,canvas):
         if self.moon.alive == True:
